@@ -1,4 +1,4 @@
-package engine;
+package engine.utils;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -53,7 +53,7 @@ public class Utils {
             out.close();
 
         } catch (Exception ex) {
-            Utils.error("Unable to open file for error logging: " + ex.getMessage(), "engine.Utils", 0, Utils.FATAL, false);
+            Utils.error("Unable to open file for error logging: " + ex.getMessage(), "engine.utils.Utils", 0, Utils.FATAL, false);
         }
     }
 

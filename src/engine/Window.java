@@ -1,5 +1,7 @@
 package engine;
 
+import engine.utils.Controls;
+import engine.utils.Utils;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -63,7 +65,7 @@ public class Window {
         glfwSetKeyCallback(this.id, (window, key, scancode, action, mods) -> {
 
             //escape key closes window
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+            if (key == Controls.CLOSE_PROGRAM && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(this.id, true);
             }
 
@@ -116,6 +118,7 @@ public class Window {
 
     //Accessors
     public boolean hasBeenResized() { return this.resized; }
+    public boolean shouldClose() { return glfwWindowShouldClose(this.id); }
     public long getId() { return this.id; }
 
     //Mutators

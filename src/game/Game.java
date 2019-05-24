@@ -1,6 +1,9 @@
 package game;
 
+import engine.Engine;
 import engine.Window;
+import engine.logic.Logic;
+import engine.logic.WorldLogic;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -9,13 +12,9 @@ public class Game {
     //main method
     public static void main(String[] args) {
 
-        //create window
-        Window window = new Window();
-        window.init();
-
-        //game loop
-        while (!glfwWindowShouldClose(window.getId())) {
-            glfwPollEvents();
-        }
+        //create window, logic, engine, start engine
+        Logic logic = new WorldLogic();
+        Engine engine = new Engine(logic);
+        engine.start();
     }
 }

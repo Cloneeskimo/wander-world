@@ -4,8 +4,7 @@ import engine.Engine;
 import engine.Window;
 import engine.logic.Logic;
 import engine.logic.WorldLogic;
-
-import static org.lwjgl.glfw.GLFW.*;
+import engine.utils.Node;
 
 public class Game {
 

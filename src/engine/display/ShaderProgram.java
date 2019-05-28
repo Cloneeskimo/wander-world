@@ -1,10 +1,16 @@
 package engine.display;
 
 import engine.utils.Utils;
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryStack;
+
+import java.nio.FloatBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.lwjgl.opengl.GL20.*;
 
-//Error Codes Used: 0 - 4
+//Error Codes Used: 0 - 6
 
 public class ShaderProgram {
 
@@ -12,12 +18,14 @@ public class ShaderProgram {
     private int vertexShaderID;
     private int fragmentShaderID;
     private int programID;
+    private Map<String, Integer> uniforms;
 
     //Constructor
     public ShaderProgram() {
         this.programID = glCreateProgram();
         if (this.programID == 0) Utils.error("Unable to create shader program",
                 "engine.display.ShaderProgram", 0, Utils.FATAL);
+        this.uniforms = new HashMap<>();
     }
 
     //Public Vertex Shader Creation Method
@@ -54,6 +62,27 @@ public class ShaderProgram {
         if (glGetProgrami(this.programID, GL_VALIDATE_STATUS) == 0)
             Utils.error("Shader validation warning: " + glGetProgramInfoLog(this.programID),
                     "engine.display.ShaderProgram", 4, Utils.INFO);
+    }
+
+    //Uniform Creation Method
+    public void createUniform(String name) {
+
+        //find uniform and put its location in the uniforms map
+        int location = glGetUniformLocation(this.programID, name);
+        if (location < 0) Utils.error("Unable to find uniform '" + name + "'", "engine.display.ShaderProgram", 5, Utils.FATAL);
+        this.uniforms.put(name, location);
+    }
+
+    //Uniform Setting Method
+    public void setUniform(String name, Matrix4f value) {
+        try {
+            MemoryStack stack = MemoryStack.stackPush();
+            FloatBuffer buf = stack.mallocFloat(16);
+            value.get(buf);
+            glUniformMatrix4fv(this.uniforms.get(name), false, buf);
+        } catch (Exception e) {
+            Utils.error("Unable to set uniform '" + name + "': " + e.getMessage(), "engine.display.ShaderProgram", 6, Utils.FATAL);
+        }
     }
 
     //Binding/Unbinding Methods

@@ -67,6 +67,8 @@ public class Window {
             //escape key closes window
             if (key == Controls.CLOSE_PROGRAM && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(this.id, true);
+            } else if (key == Controls.TOGGLE_GL_POLYGON_MODE && action == GLFW_RELEASE) {
+                Controls.togglePolygonMode();
             }
 
         });
@@ -76,7 +78,6 @@ public class Window {
             this.width = width;
             this.height = height;
             this.resized = true;
-            System.out.println("resized");
         });
 
         //double-check current frame size

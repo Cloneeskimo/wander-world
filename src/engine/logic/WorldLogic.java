@@ -1,6 +1,7 @@
 package engine.logic;
 
 import engine.Window;
+import engine.display.Camera;
 import engine.display.Mesh;
 import engine.display.Renderer;
 
@@ -10,6 +11,7 @@ public class WorldLogic implements Logic {
 
     //Data
     private Renderer renderer;
+    private Camera camera;
     private Window window;
     private Mesh mesh;
 
@@ -20,14 +22,15 @@ public class WorldLogic implements Logic {
         //assign data
         this.renderer = new Renderer(); //create renderer
         this.renderer.init(); //initialize renderer
+        this.camera = new Camera();
         this.window = window; //set window reference
 
         //create mesh
         float[] positions = new float[]{
-                -0.5f, 0.5f, 0.0f,
-                -0.5f, -0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f,
-                0.5f, 0.5f, 0.0f,};
+                -0.5f, 0.5f, -1.1f,
+                -0.5f, -0.5f, -1.1f,
+                0.5f, -0.5f, -1.1f,
+                0.5f, 0.5f, -1.1f,};
         int[] indices = new int[]{
                 0, 1, 3, 3, 1, 2,};
         this.mesh = new Mesh(positions, indices);

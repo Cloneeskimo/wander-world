@@ -16,17 +16,27 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class Renderer {
 
+    //Static Data
+    private static final float FOV = (float)Math.toRadians(60.0f);
+    private static final float Z_NEAR = 0.01f;
+    private static final float Z_FAR = 1000.0f;
+
     //Data
     ShaderProgram shaderProgram;
+    Transformer transformer;
 
     //Init Method
     public void init() {
 
-        //create shader program and link it
+        //create shader program, link it, and create unfiorms
         this.shaderProgram = new ShaderProgram();
         this.shaderProgram.createVertexShader("/shaders/vertex.glsl");
         this.shaderProgram.createFragmentShader("/shaders/fragment.glsl");
         this.shaderProgram.link();
+        this.shaderProgram.createUniform("projectionMatrix");
+
+        //create transformer
+        this.transformer = new Transformer();
     }
 
     //Render Method
@@ -44,6 +54,10 @@ public class Renderer {
 
         //bind shader program
         this.shaderProgram.bind();
+
+        //set projection matrix
+        this.shaderProgram.setUniform("projectionMatrix", this.transformer.buildProjectionMatrix(
+                Renderer.FOV, Renderer.Z_NEAR, Renderer.Z_FAR, window));
 
         //render mesh
         mesh.render();

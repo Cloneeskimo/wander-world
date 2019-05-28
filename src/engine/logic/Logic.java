@@ -4,7 +4,7 @@ import engine.Window;
 
 public interface Logic {
 
-    void init();
+    void init(Window window);
     void input();
     void update();
     void render();

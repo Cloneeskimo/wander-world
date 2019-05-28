@@ -17,13 +17,13 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
 
-    //Static Data
-    private static final boolean DEFAULT_VYSNC = true;
-    private static final int DEFAULT_WIDTH = 1280;
-    private static final int DEFAULT_HEIGHT = 720;
-    private static final String DEFAULT_TITLE = "Wander World";
+    //Default Window Settings
+    public static final boolean DEFAULT_VYSNC = true;
+    public static final int DEFAULT_WIDTH = 1280;
+    public static final int DEFAULT_HEIGHT = 720;
+    public static final String DEFAULT_TITLE = "Wander World";
 
-    //Data
+    //Window Data
     private boolean vSync;
     private boolean resized = false;
     private int width, height;
@@ -76,6 +76,7 @@ public class Window {
             this.width = width;
             this.height = height;
             this.resized = true;
+            System.out.println("resized");
         });
 
         //double-check current frame size
@@ -120,6 +121,8 @@ public class Window {
     public boolean hasBeenResized() { return this.resized; }
     public boolean shouldClose() { return glfwWindowShouldClose(this.id); }
     public long getId() { return this.id; }
+    public int getWidth() { return this.width; }
+    public int getHeight() { return this.height; }
 
     //Mutators
     public void resizeAccountedFor() { this.resized = false; }

@@ -87,6 +87,11 @@ public class Node {
     public void setName(String name) { this.name = name; }
 
     //Static Writing Method
+    /**
+     *
+     * @param node a reference to the node to write
+     * @param path the path to write the node to. will throw an error if doesn't exit or cannot open
+     */
     public static void writeNode(Node node, String path) {
 
         //try to open file to print
@@ -123,6 +128,10 @@ public class Node {
     }
 
     //Static Reading Method
+    /**
+     * @param path the path to read the node from. will throw an error if does not exist or cannot be opened
+     * @return the read node
+     */
     public static Node readNode(String path) {
 
         //create node

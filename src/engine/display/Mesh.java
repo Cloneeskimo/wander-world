@@ -1,7 +1,6 @@
 package engine.display;
 
 import engine.utils.Utils;
-import org.lwjgl.system.CallbackI;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
@@ -12,7 +11,7 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.*;
 
-//Error Codes Used: 1
+//Error Codes Used: 0
 
 public class Mesh {
 

@@ -1,6 +1,7 @@
 package engine;
 
 import engine.logic.Logic;
+import engine.utils.MouseInput;
 import engine.utils.Timer;
 import engine.utils.Utils;
 
@@ -17,14 +18,16 @@ public class Engine implements Runnable {
     private Timer timer;
     private Window window;
     private Thread loopThread;
+    private MouseInput mouseInput;
 
     //Constructor
     public Engine(Logic startingLogic) {
         this.loopThread = new Thread(this, "LOOP_THREAD"); //create loop thread
-        this.window = new Window(Window.DEFAULT_WIDTH, Window.DEFAULT_HEIGHT, Window.DEFAULT_TITLE + Utils.VERSION
+        this.window = new Window(Window.DEFAULT_WIDTH, Window.DEFAULT_HEIGHT, Window.DEFAULT_TITLE + " " + Utils.VERSION
                 + "b" + Utils.BUILD_NO, Window.DEFAULT_VYSNC); //create window
         this.logic = startingLogic; //set logic reference
         this.timer = new Timer(); //create timer
+        this.mouseInput = new MouseInput(); //create mouse input
     }
 
     //Initialization Method
@@ -32,6 +35,7 @@ public class Engine implements Runnable {
         this.window.init(); //initialize window
         this.logic.init(this.window); //initialize current logic
         this.timer.init(); //initialize timer
+        this.mouseInput.init(this.window);
     }
 
     //Start Method
@@ -45,12 +49,9 @@ public class Engine implements Runnable {
     //Run Method
     @Override
     public void run() {
-        try {
-            this.init(); //initialize the engine
-            this.loop(); //run the loop
-        } finally {
-            this.cleanup(); //cleanup at the end
-        }
+        this.init(); //initialize the engine
+        this.loop(); //run the loop
+        this.cleanup(); //cleanup at the end
     }
 
     //Logic-Changing Method
@@ -107,9 +108,9 @@ public class Engine implements Runnable {
     }
 
     //Input, Update, Render Methods
-    private void input() { this.logic.input(); }
-    private void update(float dT) { this.logic.update(dT); }
-    private void render() { this.logic.render(); this.window.swapBuffers(); }
+    private void input() { this.mouseInput.inputUpdate(); this.logic.input(); }
+    private void update(float dT) { this.logic.update(dT, mouseInput); }
+    private void render() { this.logic.render(); this.window.postRender(); }
 
     //Cleanup Method
     private void cleanup() {

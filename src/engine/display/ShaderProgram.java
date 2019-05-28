@@ -75,13 +75,13 @@ public class ShaderProgram {
 
     //Uniform Setting Method
     public void setUniform(String name, Matrix4f value) {
-        try {
-            MemoryStack stack = MemoryStack.stackPush();
+        try (MemoryStack stack = MemoryStack.stackPush()) {
             FloatBuffer buf = stack.mallocFloat(16);
             value.get(buf);
             glUniformMatrix4fv(this.uniforms.get(name), false, buf);
         } catch (Exception e) {
             Utils.error("Unable to set uniform '" + name + "': " + e.getMessage(), "engine.display.ShaderProgram", 6, Utils.FATAL);
+
         }
     }
 

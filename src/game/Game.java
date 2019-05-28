@@ -3,7 +3,6 @@ package game;
 import engine.Engine;
 import engine.logic.Logic;
 import engine.logic.WorldLogic;
-import engine.utils.Utils;
 
 public class Game {
 

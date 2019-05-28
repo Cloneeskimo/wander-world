@@ -1,16 +1,18 @@
 package engine.display;
 
+import engine.utils.Controls;
 import org.joml.Vector3f;
 
 public class Camera {
 
     //Data
-    private Vector3f position, rotation;
+    private Vector3f position, rotation, velocity;
 
     //Constructors
     public Camera() { //default
         this.position = new Vector3f();
         this.rotation = new Vector3f();
+        this.velocity = new Vector3f();
     }
 
     public Camera(Vector3f position, Vector3f rotation) { //full
@@ -38,6 +40,11 @@ public class Camera {
         this.rotation.z += offsetZ;
     }
 
+    //Update Method
+    public void update() {
+        this.movePosition(this.velocity.x, this.velocity.y, this.velocity.z);
+    }
+
     //Accessors
     public Vector3f getPosition() { return this.position; }
     public Vector3f getRotation() { return this.rotation; }
@@ -54,5 +61,13 @@ public class Camera {
         this.rotation.x = x;
         this.rotation.y = y;
         this.rotation.z = z;
+    }
+    public void accelerateX(float dx) { this.velocity.x += dx; }
+    public void accelerateY(float dy) { this.velocity.y += dy; }
+    public void accelerateZ(float dz) { this.velocity.z += dz; }
+    public void setVelocity(float x, float y, float z) {
+        this.velocity.x = x;
+        this.velocity.y = y;
+        this.velocity.z = z;
     }
 }

@@ -1,18 +1,13 @@
 package engine.display;
 
 import engine.Window;
-import engine.utils.Utils;
-import org.lwjgl.system.MemoryUtil;
+import engine.item.RenderableItem;
 
-import java.nio.FloatBuffer;
-
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
-
-//Error Codes Used: 0
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class Renderer {
 
@@ -28,12 +23,15 @@ public class Renderer {
     //Init Method
     public void init() {
 
-        //create shader program, link it, and create unfiorms
+        //create shader program, link it
         this.shaderProgram = new ShaderProgram();
         this.shaderProgram.createVertexShader("/shaders/vertex.glsl");
         this.shaderProgram.createFragmentShader("/shaders/fragment.glsl");
         this.shaderProgram.link();
+
+        //create shader program uniforms
         this.shaderProgram.createUniform("projectionMatrix");
+        this.shaderProgram.createUniform("modelViewMatrix");
 
         //create transformer
         this.transformer = new Transformer();
@@ -43,7 +41,7 @@ public class Renderer {
     /**
      * @param window the window to render to
      */
-    public void render(Window window, Mesh mesh) {
+    public void render(Window window, Camera camera, RenderableItem[] items) {
 
         //clear and check for window resize
         clear(); //clear screen
@@ -59,8 +57,18 @@ public class Renderer {
         this.shaderProgram.setUniform("projectionMatrix", this.transformer.buildProjectionMatrix(
                 Renderer.FOV, Renderer.Z_NEAR, Renderer.Z_FAR, window));
 
-        //render mesh
-        mesh.render();
+        //build view matrix
+        this.transformer.buildViewMatrix(camera);
+
+        //render items
+        for (RenderableItem item : items) {
+
+            //set model view matrix
+            this.shaderProgram.setUniform("modelViewMatrix", this.transformer.buildModelViewMatrix(item));
+
+            //render
+            item.render();
+        }
 
         //unbind shader program
         this.shaderProgram.unbind();
@@ -71,11 +79,6 @@ public class Renderer {
 
         //cleanup shaders
         if (this.shaderProgram != null) this.shaderProgram.cleanup();
-
-        //disable vao, vbo, attrib array 0
-        glDisableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
     }
 
     //Clear Method

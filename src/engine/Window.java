@@ -69,6 +69,8 @@ public class Window {
                 glfwSetWindowShouldClose(this.id, true);
             } else if (key == Controls.TOGGLE_GL_POLYGON_MODE && action == GLFW_RELEASE) {
                 Controls.togglePolygonMode();
+            } else if (key == Controls.TOGGLE_MOUSE_GRAB && action == GLFW_RELEASE) {
+                Controls.toggleMouseGrab(this.id);
             }
 
         });
@@ -114,19 +116,36 @@ public class Window {
         GL.createCapabilities();
         glfwShowWindow(this.id);
 
-        //set clear color
+        //set clear color and enable depth testing
         glClearColor(this.clearColor.x, this.clearColor.y, this.clearColor.z, this.clearColor.w);
+        glEnable(GL_DEPTH_TEST);
+
+        //enable support for transparencies
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        //enable face culling
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+
+        //grab mouse if enabled
+        if (Controls.mouseGrabbed) glfwSetInputMode(this.id, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
     //Buffer-Swapping Method
-    public void swapBuffers() { glfwSwapBuffers(this.id); }
+    public void postRender() {
+        glfwSwapBuffers(this.id);
+        glfwPollEvents();
+    }
 
     //Accessors
     public boolean hasBeenResized() { return this.resized; }
     public boolean shouldClose() { return glfwWindowShouldClose(this.id); }
     public boolean isVSync() { return this.vSync; }
+    public boolean isKeyPressed(int keyCode) { return glfwGetKey(this.id, keyCode) == GLFW_PRESS; }
     public int getWidth() { return this.width; }
     public int getHeight() { return this.height; }
+    public long getID() { return this.id; }
 
     //Mutators
     public void resizeAccountedFor() { this.resized = false; }

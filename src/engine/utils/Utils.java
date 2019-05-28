@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Utils {
 
     //Build Number, Version
-    public static final int BUILD_NO = 4;
+    public static final int BUILD_NO = 5;
     public static final String VERSION = "dev0";
 
     //Static Error Level Ints

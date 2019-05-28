@@ -1,12 +1,20 @@
 package engine;
 
 import engine.logic.Logic;
+import engine.utils.Timer;
 import engine.utils.Utils;
+
+//Error Codes Used: 0
 
 public class Engine implements Runnable {
 
+    //Static Data
+    private static final int MAX_FPS = 60;
+    private static final int MAX_UPS = 30;
+
     //Data
     private Logic logic;
+    private Timer timer;
     private Window window;
     private Thread loopThread;
 
@@ -16,12 +24,14 @@ public class Engine implements Runnable {
         this.window = new Window(Window.DEFAULT_WIDTH, Window.DEFAULT_HEIGHT, Window.DEFAULT_TITLE + Utils.VERSION
                 + "b" + Utils.BUILD_NO, Window.DEFAULT_VYSNC); //create window
         this.logic = startingLogic; //set logic reference
+        this.timer = new Timer(); //create timer
     }
 
     //Initialization Method
     public void init() {
         this.window.init(); //initialize window
         this.logic.init(this.window); //initialize current logic
+        this.timer.init(); //initialize timer
     }
 
     //Start Method
@@ -58,19 +68,47 @@ public class Engine implements Runnable {
     //Game Loop Method
     private void loop() {
 
+        //timekeeping variables
+        float deltaTime, accumulation = 0f;
+        final float interval = 1f / Engine.MAX_UPS;
+
         //loop until window needs to close
         while (!this.window.shouldClose()) {
 
-            //input, update, render
+            //timekeeping
+            deltaTime = this.timer.getDeltaTime();
+            accumulation += deltaTime;
+
+            //input
             this.input();
-            this.update();
+
+            //update
+            while (accumulation >= interval) {
+                this.update(deltaTime);
+                accumulation -= interval;
+            }
+
+            //render
             this.render();
+            if (!this.window.isVSync()) this.sync();
+        }
+    }
+
+    //Manual Sync Method
+    private void sync() {
+        double endTime = this.timer.getLastLoopTime() + (1f / Engine.MAX_FPS); //get end time of current loop
+        while (Timer.getTime() < endTime) { //until that time comes
+            try {
+                Thread.sleep(1); //sleep for a millisecond
+            } catch (Exception e) {
+                Utils.error("Unable to manual sync: " + e.getMessage(), "engine.Engine", 0, Utils.WARNING);
+            }
         }
     }
 
     //Input, Update, Render Methods
     private void input() { this.logic.input(); }
-    private void update() { this.logic.update(); }
+    private void update(float dT) { this.logic.update(dT); }
     private void render() { this.logic.render(); this.window.swapBuffers(); }
 
     //Cleanup Method

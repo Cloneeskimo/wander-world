@@ -41,8 +41,7 @@ public class WorldLogic implements Logic {
 
     //Update Method
     @Override
-    public void update() {
-
+    public void update(float dT) {
     }
 
     //Render Method

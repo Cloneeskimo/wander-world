@@ -123,7 +123,7 @@ public class Window {
     //Accessors
     public boolean hasBeenResized() { return this.resized; }
     public boolean shouldClose() { return glfwWindowShouldClose(this.id); }
-    public long getId() { return this.id; }
+    public boolean isVSync() { return this.vSync; }
     public int getWidth() { return this.width; }
     public int getHeight() { return this.height; }
 

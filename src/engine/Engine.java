@@ -71,7 +71,7 @@ public class Engine implements Runnable {
     //Input, Update, Render Methods
     private void input() { this.logic.input(); }
     private void update() { this.logic.update(); }
-    private void render() { this.logic.render(); }
+    private void render() { this.logic.render(); this.window.swapBuffers(); }
 
     //Cleanup Method
     private void cleanup() {

@@ -117,6 +117,9 @@ public class Window {
         glClearColor(this.clearColor.x, this.clearColor.y, this.clearColor.z, this.clearColor.w);
     }
 
+    //Buffer-Swapping Method
+    public void swapBuffers() { glfwSwapBuffers(this.id); }
+
     //Accessors
     public boolean hasBeenResized() { return this.resized; }
     public boolean shouldClose() { return glfwWindowShouldClose(this.id); }

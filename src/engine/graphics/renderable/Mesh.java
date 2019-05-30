@@ -5,6 +5,8 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.List;
+import java.util.function.Consumer;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
@@ -108,12 +110,30 @@ public class Mesh {
         this(position, texCoords, normals, indices, new Material());
     }
 
-    //Render Method
+    /**
+     * Renders a this mesh singly
+     */
     public void render() {
 
         //render this mesh
         this.preRender();
         glDrawElements(GL_TRIANGLES, this.vertexCount, GL_UNSIGNED_INT, 0);
+        this.postRender();
+    }
+
+    /**
+     * Renders multiple RenderableItems with this mesh
+     */
+    public void renderList(List<RenderableItem> items, Consumer<RenderableItem> consumer) {
+
+        //render each item
+        this.preRender();
+        for (RenderableItem item : items) {
+
+            //set up data required by item
+            consumer.accept(item);
+            glDrawElements(GL_TRIANGLES, this.vertexCount, GL_UNSIGNED_INT, 0);
+        }
         this.postRender();
     }
 

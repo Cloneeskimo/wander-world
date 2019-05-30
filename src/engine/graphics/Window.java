@@ -27,7 +27,7 @@ public class Window {
     private int width, height;
     private long id;
     private String title;
-    private Vector4f clearColor  = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
+    private Vector4f clearColor  = new Vector4f(0.5f, 0.5f, 0.5f, 1.0f);
 
     //Full Constructor
     public Window(int width, int height, String title, boolean vSync) {

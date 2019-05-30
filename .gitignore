@@ -4,4 +4,4 @@
 /out/*
 *.iml
 */META-INF/*
-/data/errors/*
+/data/logs/*

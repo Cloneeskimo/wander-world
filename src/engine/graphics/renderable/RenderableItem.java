@@ -1,6 +1,5 @@
-package engine;
+package engine.graphics.renderable;
 
-import engine.graphics.renderable.Mesh;
 import org.joml.Vector3f;
 
 public class RenderableItem {

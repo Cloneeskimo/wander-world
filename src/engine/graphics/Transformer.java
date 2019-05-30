@@ -1,6 +1,6 @@
 package engine.graphics;
 
-import engine.RenderableItem;
+import engine.graphics.renderable.RenderableItem;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -72,4 +72,7 @@ public class Transformer {
         Matrix4f viewMatrixCopy = new Matrix4f(this.viewMatrix);
         return viewMatrixCopy.mul(modelViewMatrix);
     }
+
+    //Accessors
+    public Matrix4f getViewMatrix() { return this.viewMatrix; }
 }

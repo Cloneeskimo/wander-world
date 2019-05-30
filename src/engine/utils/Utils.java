@@ -1,22 +1,11 @@
 package engine.utils;
 
-import org.lwjgl.BufferUtils;
-
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.channels.SeekableByteChannel;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-import static org.lwjgl.BufferUtils.createByteBuffer;
 
 //Error Codes Used: 0 - 7
 
@@ -110,59 +99,6 @@ public class Utils {
                     "engine.utils.Utils", 5, Utils.FATAL);
         }
         return file;
-    }
-
-    /**
-     * Converts a resource to a ByteBuffer to avoid conflicts when dealing with paths inside of jars
-     * @param resourcePath the resourcePath of the resource to be converted to a ByteBuffer
-     * @param bufferSize the size of the buffer
-     * @return the ByteBuffer constructed from the resource
-     * @throws IOException
-     */
-    public static ByteBuffer resourceToByteBuffer(String resourcePath, int bufferSize) throws IOException {
-
-        //create buffer and get path
-        ByteBuffer buffer;
-        Path path = Paths.get(resourcePath);
-        //use a SeekableByteChannel if the path is readable
-        if (Files.isReadable(path)) {
-            try (SeekableByteChannel fc = Files.newByteChannel(path)) {
-                buffer = BufferUtils.createByteBuffer((int) fc.size() + 1);
-                while (fc.read(buffer) != -1);
-            }
-
-        //otherwise read the resource through an input stream
-        } else {
-            try (InputStream source = Utils.class.getResourceAsStream(resourcePath);
-                    ReadableByteChannel rbc = Channels.newChannel(source)) {
-                buffer = createByteBuffer(bufferSize);
-
-                while (true) {
-                    int bytes = rbc.read(buffer);
-                    if (bytes == -1) break;
-                    if (buffer.remaining() == 0) {
-                        buffer = resizeBuffer(buffer, buffer.capacity() * 2);
-                    }
-                }
-            }
-        }
-
-        //flip the buffer and return it
-        buffer.flip();
-        return buffer;
-    }
-
-    /**
-     * Resizes a buffer
-     * @param buffer the buffer to resize
-     * @param newCapacity the capacity to resize it to
-     * @return the resized buffer
-     */
-    private static ByteBuffer resizeBuffer(ByteBuffer buffer, int newCapacity) {
-        ByteBuffer newBuffer = BufferUtils.createByteBuffer(newCapacity);
-        buffer.flip();
-        newBuffer.put(buffer);
-        return newBuffer;
     }
 
     /**

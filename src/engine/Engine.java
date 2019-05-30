@@ -78,13 +78,9 @@ public class Engine implements Runnable {
     //Game Loop Method
     private void loop() {
 
-        System.out.println("1");
-
         //timekeeping variables
         float deltaTime, accumulation = 0f;
         final float interval = 1f / Engine.MAX_UPS;
-
-        System.out.println("2");
 
         //loop until window needs to close
         while (!this.window.shouldClose()) {

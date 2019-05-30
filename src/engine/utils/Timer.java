@@ -5,9 +5,12 @@ public class Timer {
     //Data
     private double lastLoopTime;
 
-    //Initialization Method
+    //Init Method
     public void init() { this.lastLoopTime = Timer.getTime(); }
 
+    /**
+     * @return the amount of time (delta time) since the last call of this method
+     */
     public float getDeltaTime() {
         double currentTime = Timer.getTime();
         float deltaTime = (float)(currentTime - this.lastLoopTime);
@@ -15,9 +18,13 @@ public class Timer {
         return deltaTime;
     }
 
-    //Time Acquisition Method
+    /**
+     * @return the current time
+     */
     public static double getTime() { return System.nanoTime() / 1000_000_000.0; }
 
-    //Accessors
+    /**
+     * @return the time that getDeltaTime() was called last
+     */
     public double getLastLoopTime() { return this.lastLoopTime; }
 }

@@ -24,7 +24,7 @@ public class MouseInput {
         this.deltaPosition = new Vector2f();
     }
 
-    //Initialization Method
+    //Init Method
     public void init(Window window) {
 
         //get starting position
@@ -54,7 +54,9 @@ public class MouseInput {
         });
     }
 
-    //Input Update Method
+    /**
+     * updates the mouse position and the delta mouse position of this MouseInput
+     */
     public void inputUpdate() {
         this.deltaPosition.x = this.deltaPosition.y = 0;
         if (this.inWindow) {

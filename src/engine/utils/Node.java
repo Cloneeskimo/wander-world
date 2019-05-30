@@ -9,6 +9,10 @@ import java.util.List;
 
 //Error Codes Used: 0 - 6
 
+/**
+ * Holds a singular piece of data, and can hold children nodes with their own data. Has the capability to be
+ * written and loaded from files, allowing for easy and safe data saving/loading
+ */
 public class Node {
 
     //Static Data
@@ -20,30 +24,34 @@ public class Node {
     private String value;
     private List<Node> children;
 
-    //Constructors
-    public Node(String name, String value, List<Node> children) { //full
+    //Full Constructor
+    public Node(String name, String value, List<Node> children) {
         this.name = name;
         this.value = value;
         this.children = children;
     }
 
-    public Node(String name, String data, Node child) { //constructor with single child
+    //Single Child Constructor
+    public Node(String name, String data, Node child) {
         this(name, data, new ArrayList<>());
         this.children.add(child);
     }
 
-    public Node(String name, String value) { //constructor with no children
+    //No Child Constructor
+    public Node(String name, String value) {
         this.name = name;
         this.value = value;
     }
 
-    public Node(String name) { //constructor with just name
+    //Name Constructor
+    public Node(String name) {
         this.name = name;
     }
 
-    public Node() {} //default constructor
+    //Default Constructor
+    public Node() {}
 
-    //Children Manipulation
+    //Children Manipulation Methods
     public List<Node> getChildren() { return this.children; }
     public int getChildCount() { return this.children.size(); }
 
@@ -89,11 +97,10 @@ public class Node {
     public void setValue(String value) { this.value = value; }
     public void setName(String name) { this.name = name; }
 
-    //Static Writing Method
     /**
-     *
-     * @param node a reference to the node to write
-     * @param path the path to write the node to. will throw an error if doesn't exit or cannot open
+     * Writes a node to a file
+     * @param node the Node to write
+     * @param path the path to write the Node to. Will throw an error if doesn't exit or cannot open
      */
     public static void writeNode(Node node, String path) {
 
@@ -112,7 +119,12 @@ public class Node {
         }
     }
 
-    //Recursive Node Writing Method
+    /**
+     * Recursively write a node to a file
+     * @param out the PrintWriter to use for writing
+     * @param node the current node in focus
+     * @param indent the current indent to use
+     */
     private static void writeNodeR(PrintWriter out, Node node, StringBuilder indent) {
 
         //print name and date
@@ -130,10 +142,10 @@ public class Node {
         }
     }
 
-    //Static Reading Method
     /**
-     * @param path the path to read the node from. will throw an error if does not exist or cannot be opened
-     * @return the read node
+     * Reads a node from a file
+     * @param path the path to read the Node from. Will throw an error if does not exist or cannot be opened
+     * @return the read Node
      */
     public static Node readNode(String path) {
 
@@ -159,7 +171,14 @@ public class Node {
         return node;
     }
 
-    //Recursive Node Reading Method
+    /**
+     * Recursively reads a Node from a file
+     * @param node the current Node in focus
+     * @param fileContents the recursively static file contents
+     * @param i the current line of fileContents in focus
+     * @param indent the current indent in terms of number of characters
+     * @return the node in focus and its recursively read children
+     */
     private static int readNodeR(Node node, List<String> fileContents, int i, int indent) {
 
         //format next line and find dividing point

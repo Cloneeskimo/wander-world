@@ -1,12 +1,16 @@
 package game;
 
 import engine.Engine;
-import engine.logic.Logic;
-import engine.logic.WorldLogic;
+import engine.Logic;
+import game.logic.WorldLogic;
 
 public class Game {
 
-    //main method
+    //Build Number, Version
+    public static final int BUILD_NO = 20;
+    public static final String VERSION = "dev0";
+
+    //Main Method
     public static void main(String[] args) {
 
         //create window, logic, engine, start engine

@@ -1,13 +1,9 @@
-package engine.display;
+package engine.graphics;
 
+import engine.RenderableItem;
 import engine.Window;
-import engine.item.RenderableItem;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class Renderer {
 
@@ -29,17 +25,23 @@ public class Renderer {
         this.shaderProgram.createFragmentShader("/shaders/fragment.glsl");
         this.shaderProgram.link();
 
-        //create shader program uniforms
+        //create matrix uniforms
         this.shaderProgram.createUniform("projectionMatrix");
         this.shaderProgram.createUniform("modelViewMatrix");
+
+        //create other uniforms
+        this.shaderProgram.createUniform("textureSampler");
+        this.shaderProgram.createMaterialUniform("material");
 
         //create transformer
         this.transformer = new Transformer();
     }
 
-    //Render Method
     /**
-     * @param window the window to render to
+     * Renders a scene
+     * @param window the Window to render to
+     * @param camera the Camera whose view to take into account
+     * @param items the array of RenderableItems to render
      */
     public void render(Window window, Camera camera, RenderableItem[] items) {
 
@@ -53,6 +55,9 @@ public class Renderer {
         //bind shader program
         this.shaderProgram.bind();
 
+        //set texture sampler
+        this.shaderProgram.setUniform("textureSampler", 0);
+
         //set projection matrix
         this.shaderProgram.setUniform("projectionMatrix", this.transformer.buildProjectionMatrix(
                 Renderer.FOV, Renderer.Z_NEAR, Renderer.Z_FAR, window));
@@ -65,6 +70,9 @@ public class Renderer {
 
             //set model view matrix
             this.shaderProgram.setUniform("modelViewMatrix", this.transformer.buildModelViewMatrix(item));
+
+            //set material
+            this.shaderProgram.setUniform("material", item.getMesh().getMaterial());
 
             //render
             item.render();

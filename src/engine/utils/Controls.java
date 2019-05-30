@@ -22,14 +22,18 @@ public class Controls {
     public static int currentPolygonMode = GL_FILL;
     public static boolean mouseGrabbed = true;
 
-    //Polygon Mode Toggling Method
+    /**
+     * Toggles OpenGL's polygon mode
+     */
     public static void togglePolygonMode() {
         Controls.currentPolygonMode = (Controls.currentPolygonMode == GL_FILL) ? GL_LINE : GL_FILL;
-        System.out.println("toggled");
         glPolygonMode(GL_FRONT_AND_BACK, Controls.currentPolygonMode);
     }
 
-    //Mouse Grab Toggling Method
+    /**
+     * Toggles whether the mouse is grabbed or not
+     * @param windowID the id of the Window for which to toggle the mouse grab
+     */
     public static void toggleMouseGrab(long windowID) {
         Controls.mouseGrabbed = !Controls.mouseGrabbed;
         glfwSetInputMode(windowID, GLFW_CURSOR, Controls.mouseGrabbed ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);

@@ -1,15 +1,18 @@
-package engine.logic;
+package game.logic;
 
+import engine.Logic;
+import engine.RenderableItem;
 import engine.Window;
-import engine.display.Camera;
-import engine.display.Mesh;
-import engine.display.Renderer;
-import engine.item.RenderableItem;
+import engine.graphics.Camera;
+import engine.graphics.OBJLoader;
+import engine.graphics.Renderer;
+import engine.graphics.renderable.Material;
+import engine.graphics.renderable.Mesh;
+import engine.graphics.renderable.Texture;
 import engine.utils.Controls;
 import engine.utils.MouseInput;
 import org.joml.Vector2f;
-
-import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import org.joml.Vector4f;
 
 public class WorldLogic implements Logic {
 
@@ -21,7 +24,7 @@ public class WorldLogic implements Logic {
 
     //Init Method
     @Override
-    public void init(Window window) {
+    public void init(Window window) throws Exception {
 
         //assign data
         this.renderer = new Renderer(); //create renderer
@@ -29,17 +32,21 @@ public class WorldLogic implements Logic {
         this.camera = new Camera();
         this.window = window; //set window reference
 
-        //create mesh
-        float[] positions = new float[]{
-                -0.5f, 0.5f, -1.1f,
-                -0.5f, -0.5f, -1.1f,
-                0.5f, -0.5f, -1.1f,
-                0.5f, 0.5f, -1.1f,};
-        int[] indices = new int[]{
-                0, 1, 3, 3, 1, 2,};
-        Mesh mesh = new Mesh(positions, indices);
-        RenderableItem item = new RenderableItem(mesh);
-        this.items = new RenderableItem[] { item };
+        //create pillar item
+        Texture pillarTexture = new Texture("/textures/templepillar.png");
+        Material pillarMaterial = new Material(pillarTexture);
+        Mesh pillarMesh = OBJLoader.loadOBJ("/models/pillar.obj");
+        pillarMesh.setMaterial(pillarMaterial);
+        RenderableItem pillar = new RenderableItem(pillarMesh);
+        pillar.setPosition(1, 0, -5);
+
+        //create second pillar item
+        Material pillarMaterial2 = new Material(new Vector4f(0.5f, 0.5f, 0.5f, 0.9f));
+        Mesh pillarMesh2 = OBJLoader.loadOBJ("/models/pillar.obj");
+        pillarMesh2.setMaterial(pillarMaterial2);
+        RenderableItem pillar2 = new RenderableItem(pillarMesh2);
+        pillar2.setPosition(-1, 0, -5);
+        this.items = new RenderableItem[] { pillar, pillar2 };
     }
 
     //Input Method

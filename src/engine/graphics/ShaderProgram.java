@@ -1,7 +1,9 @@
-package engine.display;
+package engine.graphics;
 
+import engine.graphics.renderable.Material;
 import engine.utils.Utils;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.FloatBuffer;
@@ -24,11 +26,14 @@ public class ShaderProgram {
     public ShaderProgram() {
         this.programID = glCreateProgram();
         if (this.programID == 0) Utils.error("Unable to create shader program",
-                "engine.display.ShaderProgram", 0, Utils.FATAL);
+                "engine.graphics.ShaderProgram", 0, Utils.FATAL);
         this.uniforms = new HashMap<>();
     }
 
-    //Public Vertex Shader Creation Method
+    /**
+     * Creates a vertex shader and sets it as this shader program's vertex shader
+     * @param resourcePath the path of the vertex shader source code
+     */
     public void createVertexShader(String resourcePath) {
 
         //load code into string and create shader
@@ -36,7 +41,10 @@ public class ShaderProgram {
         this.vertexShaderID = this.createShader(code, GL_VERTEX_SHADER);
     }
 
-    //Public Fragment Shader Creation Method
+    /**
+     * Creates a fragment shader and sets it as this shader program's fragment shader
+     * @param resourcePath the path of the fragment shader source code
+     */
     public void createFragmentShader(String resourcePath) {
 
         //load code into string and create shader
@@ -44,14 +52,16 @@ public class ShaderProgram {
         this.fragmentShaderID = this.createShader(code, GL_FRAGMENT_SHADER);
     }
 
-    //Shader Linking Method
+    /**
+     * Links the shader program
+     */
     public void link() {
 
         //link shader and check for errors
         glLinkProgram(this.programID);
         if (glGetProgrami(this.programID, GL_LINK_STATUS) == 0)
             Utils.error("Unable to link shaders: " + glGetProgramInfoLog(this.programID),
-                    "engine.display.ShaderProgram", 3, Utils.FATAL);
+                    "engine.graphics.ShaderProgram", 3, Utils.FATAL);
 
         //detach shaders
         if (this.vertexShaderID != 0) glDetachShader(this.programID, this.vertexShaderID);
@@ -61,28 +71,48 @@ public class ShaderProgram {
         glValidateProgram(this.programID);
         if (glGetProgrami(this.programID, GL_VALIDATE_STATUS) == 0)
             Utils.error("Shader validation warning: " + glGetProgramInfoLog(this.programID),
-                    "engine.display.ShaderProgram", 4, Utils.INFO);
+                    "engine.graphics.ShaderProgram", 4, Utils.INFO);
     }
 
-    //Uniform Creation Method
+    /**
+     * Creates a uniform for this shader program
+     * @param name the name of the uniform
+     */
     public void createUniform(String name) {
 
         //find uniform and put its location in the uniforms map
         int location = glGetUniformLocation(this.programID, name);
-        if (location < 0) Utils.error("Unable to find uniform '" + name + "'", "engine.display.ShaderProgram", 5, Utils.FATAL);
+        if (location < 0) Utils.error("Unable to find uniform '" + name + "'",
+                "engine.graphics.ShaderProgram", 5, Utils.FATAL);
         this.uniforms.put(name, location);
     }
 
-    //Uniform Setting Method
+    /**
+     * Creates a material uniform
+     * @param name the name of the uniform
+     */
+    public void createMaterialUniform(String name) {
+        this.createUniform(name + ".hasTexture");
+        this.createUniform(name + ".color");
+    }
+
+    //Uniform Setting Methods
+    public void setUniform(String name, int value) { glUniform1i(this.uniforms.get(name), value); }
+    public void setUniform(String name, Vector4f value) { glUniform4f(this.uniforms.get(name), value.x, value.y,
+            value.z, value.w); }
     public void setUniform(String name, Matrix4f value) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             FloatBuffer buf = stack.mallocFloat(16);
             value.get(buf);
             glUniformMatrix4fv(this.uniforms.get(name), false, buf);
         } catch (Exception e) {
-            Utils.error("Unable to set uniform '" + name + "': " + e.getMessage(), "engine.display.ShaderProgram", 6, Utils.FATAL);
-
+            Utils.error("Unable to set uniform '" + name + "': " + e.getMessage(),
+                    "engine.graphics.ShaderProgram", 6, Utils.FATAL);
         }
+    }
+    public void setUniform(String name, Material value) {
+        this.setUniform(name + ".hasTexture", value.isTextured() ? 1 : 0);
+        this.setUniform(name + ".color", value.getColor());
     }
 
     //Binding/Unbinding Methods
@@ -95,8 +125,8 @@ public class ShaderProgram {
         if (this.programID != 0) glDeleteProgram(this.programID); //delete program
     }
 
-    //Private Shader Creation Method
     /**
+     * Creates a shader
      * @param code a string containing all of the shader code
      * @param type the type of shader, use one of OpenGL's constants for this
      * @return the id of the shader
@@ -106,7 +136,7 @@ public class ShaderProgram {
         //create shader
         int shaderID = glCreateShader(type);
         if (shaderID == 0) Utils.error("Unable to create shader of type " + type,
-                "engine.display.ShaderProgram", 1, Utils.FATAL);
+                "engine.graphics.ShaderProgram", 1, Utils.FATAL);
 
         //set source and compile shader
         glShaderSource(shaderID, code);
@@ -115,7 +145,7 @@ public class ShaderProgram {
         //check compilation result and attach shader
         if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == 0)
             Utils.error("Unable to compile shader code: " + glGetShaderInfoLog(shaderID),
-                    "engine.display.ShaderProgram", 2, Utils.FATAL);
+                    "engine.graphics.ShaderProgram", 2, Utils.FATAL);
         glAttachShader(this.programID, shaderID);
 
         //return shader id

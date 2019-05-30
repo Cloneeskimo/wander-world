@@ -1,9 +1,9 @@
 package engine;
 
-import engine.logic.Logic;
 import engine.utils.MouseInput;
 import engine.utils.Timer;
 import engine.utils.Utils;
+import game.Game;
 
 //Error Codes Used: 0
 
@@ -23,22 +23,24 @@ public class Engine implements Runnable {
     //Constructor
     public Engine(Logic startingLogic) {
         this.loopThread = new Thread(this, "LOOP_THREAD"); //create loop thread
-        this.window = new Window(Window.DEFAULT_WIDTH, Window.DEFAULT_HEIGHT, Window.DEFAULT_TITLE + " " + Utils.VERSION
-                + "b" + Utils.BUILD_NO, Window.DEFAULT_VYSNC); //create window
+        this.window = new Window(Window.DEFAULT_WIDTH, Window.DEFAULT_HEIGHT, Window.DEFAULT_TITLE + " " + Game.VERSION
+                + "b" + Game.BUILD_NO, Window.DEFAULT_VYSNC); //create window
         this.logic = startingLogic; //set logic reference
         this.timer = new Timer(); //create timer
         this.mouseInput = new MouseInput(); //create mouse input
     }
 
-    //Initialization Method
-    public void init() {
+    //Init Method
+    public void init() throws Exception {
         this.window.init(); //initialize window
         this.logic.init(this.window); //initialize current logic
         this.timer.init(); //initialize timer
         this.mouseInput.init(this.window);
     }
 
-    //Start Method
+    /**
+     * Starts the engine
+     */
     public void start() {
         if (System.getProperty("os.name").contains("Mac")) { //if mac,
             System.setProperty("java.awt.headless", "true"); //set awt headless to true
@@ -46,21 +48,28 @@ public class Engine implements Runnable {
         } else this.loopThread.start(); //otherwise, start the thread
     }
 
-    //Run Method
+    /**
+     * Runs the engine - DO NOT CALL FROM EXTERNAL SOURCE - only public to satisfy override
+     */
     @Override
     public void run() {
-        this.init(); //initialize the engine
-        this.loop(); //run the loop
-        this.cleanup(); //cleanup at the end
+        try {
+            this.init(); //initialize the engine
+            this.loop(); //run the loop
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            this.cleanup(); //cleanup at the end
+        }
     }
 
-    //Logic-Changing Method
     /**
+     * Changes the engine's current logic to follow
      * @param logic the logic to change the engine to follow
      * @param init whether to call the logic's init function
      * @param cleanup whether to cleanup the previous logic
      */
-    public void changeLogic(Logic logic, boolean init, boolean cleanup) {
+    public void changeLogic(Logic logic, boolean init, boolean cleanup) throws Exception {
         if (cleanup) this.logic.cleanup(); //cleanup previous logic if cleanup is true
         this.logic = logic; //set logic reference
         if (init) this.logic.init(this.window); //initialize logic if init is true
@@ -69,9 +78,13 @@ public class Engine implements Runnable {
     //Game Loop Method
     private void loop() {
 
+        System.out.println("1");
+
         //timekeeping variables
         float deltaTime, accumulation = 0f;
         final float interval = 1f / Engine.MAX_UPS;
+
+        System.out.println("2");
 
         //loop until window needs to close
         while (!this.window.shouldClose()) {

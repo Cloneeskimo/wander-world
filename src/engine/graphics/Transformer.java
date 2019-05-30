@@ -1,7 +1,7 @@
-package engine.display;
+package engine.graphics;
 
+import engine.RenderableItem;
 import engine.Window;
-import engine.item.RenderableItem;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -17,12 +17,12 @@ public class Transformer {
         this.viewMatrix = new Matrix4f();
     }
 
-    //Projection Matrix Building Method
     /**
-     * @param FOV - the desired field of view (in radians)
-     * @param zNear - the nearest distance from the camera to be visible
-     * @param zFar - the farthest distance from the camera to be visible
-     * @param window - a reference to the window
+     * Builds a projection matrix and sets it as this Transformer's projection matrix
+     * @param FOV the desired field of view (in radians)
+     * @param zNear the nearest distance from the camera to be visible
+     * @param zFar the farthest distance from the camera to be visible
+     * @param window a reference to the window
      * @return the built projection matrix
      */
     public Matrix4f buildProjectionMatrix(float FOV, float zNear, float zFar, Window window) {
@@ -35,9 +35,9 @@ public class Transformer {
         return this.projectionMatrix;
     }
 
-    //View Matrix Building Method
     /**
-     * @param camera - the camera whose view is to be considered
+     * Builds a view matrix and sets it as this Transformer's view matrix
+     * @param camera the camera whose view is to be considered
      * @return the built view matrix
      */
     public Matrix4f buildViewMatrix(Camera camera) {
@@ -57,9 +57,9 @@ public class Transformer {
         return this.viewMatrix;
     }
 
-    //ModelView Matrix Building Method
     /**
-     * @param item - the item whose aspects are to be considered
+     * Builds a model view matrix based off of this Transformer's view matrix
+     * @param item the item whose aspects are to be considered
      * @return the built model view matrix
      */
     public Matrix4f buildModelViewMatrix(RenderableItem item) {
@@ -73,7 +73,4 @@ public class Transformer {
         Matrix4f viewMatrixCopy = new Matrix4f(this.viewMatrix);
         return viewMatrixCopy.mul(modelViewMatrix);
     }
-
-    //Accessors
-    public Matrix4f getProjectionMatrix() { return this.projectionMatrix; }
 }

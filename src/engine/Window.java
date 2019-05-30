@@ -13,7 +13,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-//ERROR CODES USED: 0-2
+//Error Codes Used: 0-2
 
 public class Window {
 
@@ -31,19 +31,20 @@ public class Window {
     private String title;
     private Vector4f clearColor  = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-    //Constructors
-    public Window(int width, int height, String title, boolean vSync) { //full
+    //Full Constructor
+    public Window(int width, int height, String title, boolean vSync) {
         this.vSync = vSync;
         this.width = width;
         this.height = height;
         this.title = title;
     }
 
-    public Window() { //default
+    //Default Constructor
+    public Window() {
         this(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_TITLE, DEFAULT_VYSNC);
     }
 
-    //Initialization Method
+    //Init Method
     public void init() {
 
         //init GLFW
@@ -132,7 +133,9 @@ public class Window {
         if (Controls.mouseGrabbed) glfwSetInputMode(this.id, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
-    //Buffer-Swapping Method
+    /**
+     * Swaps this window's buffers and polls for events - should be called after renderering
+     */
     public void postRender() {
         glfwSwapBuffers(this.id);
         glfwPollEvents();

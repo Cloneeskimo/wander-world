@@ -1,6 +1,6 @@
-package engine.item;
+package engine;
 
-import engine.display.Mesh;
+import engine.graphics.renderable.Mesh;
 import org.joml.Vector3f;
 
 public class RenderableItem {
@@ -23,6 +23,7 @@ public class RenderableItem {
     public void render() { this.mesh.render(); }
 
     //Accessors
+    public Mesh getMesh() { return this.mesh; }
     public Vector3f getPosition() { return this.position; }
     public Vector3f getRotation() { return rotation; }
     public float getScale() { return this.scale; }

@@ -1,6 +1,6 @@
 package engine.utils;
 
-import engine.Window;
+import engine.graphics.Window;
 import org.joml.Vector2d;
 import org.joml.Vector2f;
 

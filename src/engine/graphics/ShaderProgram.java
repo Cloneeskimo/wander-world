@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static org.lwjgl.opengl.GL20.*;
 
-//Error Codes Used: 0 - 6
+//Info Codes Used: 0
 
 public class ShaderProgram {
 
@@ -25,8 +25,11 @@ public class ShaderProgram {
     //Constructor
     public ShaderProgram() {
         this.programID = glCreateProgram();
-        if (this.programID == 0) Utils.error("Unable to create shader program",
-                "engine.graphics.ShaderProgram", 0, Utils.FATAL);
+        if (this.programID == 0) {
+            IllegalStateException e = new IllegalStateException("Unable to create shader program");
+            Utils.log(e, "engine.graphics.ShaderProgram");
+            throw e;
+        }
         this.uniforms = new HashMap<>();
     }
 
@@ -59,9 +62,11 @@ public class ShaderProgram {
 
         //link shader and check for errors
         glLinkProgram(this.programID);
-        if (glGetProgrami(this.programID, GL_LINK_STATUS) == 0)
-            Utils.error("Unable to link shaders: " + glGetProgramInfoLog(this.programID),
-                    "engine.graphics.ShaderProgram", 3, Utils.FATAL);
+        if (glGetProgrami(this.programID, GL_LINK_STATUS) == 0) {
+            IllegalStateException e = new IllegalStateException("Unable to link shades");
+            Utils.log(e, "engine.graphics.ShaderProgram");
+            throw e;
+        }
 
         //detach shaders
         if (this.vertexShaderID != 0) glDetachShader(this.programID, this.vertexShaderID);
@@ -70,8 +75,8 @@ public class ShaderProgram {
         //validate program
         glValidateProgram(this.programID);
         if (glGetProgrami(this.programID, GL_VALIDATE_STATUS) == 0)
-            Utils.error("Shader validation warning: " + glGetProgramInfoLog(this.programID),
-                    "engine.graphics.ShaderProgram", 4, Utils.INFO);
+            Utils.log("Shader validation warning: " + glGetProgramInfoLog(this.programID),
+                    "engine.graphics.ShaderProgram", 0, true);
     }
 
     /**
@@ -82,8 +87,11 @@ public class ShaderProgram {
 
         //find uniform and put its location in the uniforms map
         int location = glGetUniformLocation(this.programID, name);
-        if (location < 0) Utils.error("Unable to find uniform '" + name + "'",
-                "engine.graphics.ShaderProgram", 5, Utils.FATAL);
+        if (location < 0) {
+            IllegalStateException e = new IllegalStateException("Unable to find uniform '" + name + "'");
+            Utils.log(e, "engine.graphics.ShaderProgram");
+            throw e;
+        }
         this.uniforms.put(name, location);
     }
 
@@ -106,8 +114,8 @@ public class ShaderProgram {
             value.get(buf);
             glUniformMatrix4fv(this.uniforms.get(name), false, buf);
         } catch (Exception e) {
-            Utils.error("Unable to set uniform '" + name + "': " + e.getMessage(),
-                    "engine.graphics.ShaderProgram", 6, Utils.FATAL);
+            Utils.log(e, "engine.graphics.ShaderProgram");
+            e.printStackTrace();
         }
     }
     public void setUniform(String name, Material value) {
@@ -135,17 +143,23 @@ public class ShaderProgram {
 
         //create shader
         int shaderID = glCreateShader(type);
-        if (shaderID == 0) Utils.error("Unable to create shader of type " + type,
-                "engine.graphics.ShaderProgram", 1, Utils.FATAL);
+        if (shaderID == 0) {
+            IllegalStateException e = new IllegalStateException("Unable to create shader of type " + type);
+            Utils.log(e, "engine.graphics.ShaderProgram");
+            throw e;
+        }
 
         //set source and compile shader
         glShaderSource(shaderID, code);
         glCompileShader(shaderID);
 
         //check compilation result and attach shader
-        if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == 0)
-            Utils.error("Unable to compile shader code: " + glGetShaderInfoLog(shaderID),
-                    "engine.graphics.ShaderProgram", 2, Utils.FATAL);
+        if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == 0) {
+            IllegalStateException e = new IllegalStateException("Unable to compile shader code: " +
+                    glGetShaderInfoLog(shaderID));
+            Utils.log(e, "engine.graphics.ShaderProgram");
+            throw e;
+        }
         glAttachShader(this.programID, shaderID);
 
         //return shader id

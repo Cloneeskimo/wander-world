@@ -1,7 +1,6 @@
 package engine.graphics;
 
 import engine.RenderableItem;
-import engine.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 

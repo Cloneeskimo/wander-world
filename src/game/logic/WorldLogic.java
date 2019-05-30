@@ -2,7 +2,7 @@ package game.logic;
 
 import engine.Logic;
 import engine.RenderableItem;
-import engine.Window;
+import engine.graphics.Window;
 import engine.graphics.Camera;
 import engine.graphics.OBJLoader;
 import engine.graphics.Renderer;
@@ -88,6 +88,8 @@ public class WorldLogic implements Logic {
     @Override
     public void cleanup() {
         this.renderer.cleanup();
-        for (RenderableItem item : this.items) item.cleanup();
+        if (this.items != null) {
+            for (RenderableItem item : this.items) item.cleanup();
+        }
     }
 }

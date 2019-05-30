@@ -1,5 +1,6 @@
 package engine;
 
+import engine.graphics.Window;
 import engine.utils.MouseInput;
 
 public interface Logic {

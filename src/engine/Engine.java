@@ -1,11 +1,10 @@
 package engine;
 
+import engine.graphics.Window;
 import engine.utils.MouseInput;
 import engine.utils.Timer;
 import engine.utils.Utils;
 import game.Game;
-
-//Error Codes Used: 0
 
 public class Engine implements Runnable {
 
@@ -57,6 +56,7 @@ public class Engine implements Runnable {
             this.init(); //initialize the engine
             this.loop(); //run the loop
         } catch (Exception e) {
+            Utils.log(e, "engine.Engine");
             e.printStackTrace();
         } finally {
             this.cleanup(); //cleanup at the end
@@ -110,8 +110,9 @@ public class Engine implements Runnable {
         while (Timer.getTime() < endTime) { //until that time comes
             try {
                 Thread.sleep(1); //sleep for a millisecond
-            } catch (Exception e) {
-                Utils.error("Unable to manual sync: " + e.getMessage(), "engine.Engine", 0, Utils.WARNING);
+            } catch (InterruptedException e) {
+                Utils.log(e, "engine.Engine");
+                e.printStackTrace();
             }
         }
     }

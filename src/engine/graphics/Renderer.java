@@ -1,7 +1,6 @@
 package engine.graphics;
 
 import engine.RenderableItem;
-import engine.Window;
 
 import static org.lwjgl.opengl.GL11.*;
 

@@ -11,8 +11,6 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.*;
 
-//Error Codes Used: 0
-
 public class Mesh {
 
     //Data
@@ -86,9 +84,12 @@ public class Mesh {
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
 
-            //catch errors
+            //catch exceptions
         } catch (Exception e) {
-            Utils.error("Unable to create mesh: " + e.getMessage(), "engine.graphics.renderable.Mesh", 0, Utils.FATAL);
+
+            Utils.log(e, "engine.graphics.renderable.Mesh");
+            e.printStackTrace();
+
         } finally {
 
             //free memory

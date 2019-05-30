@@ -1,13 +1,10 @@
 package engine.utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//Error Codes Used: 0 - 6
+//Info Codes Used: 0 - 1
 
 /**
  * Holds a singular piece of data, and can hold children nodes with their own data. Has the capability to be
@@ -68,8 +65,8 @@ public class Node {
 
     public Node getChild(int index) {
         if (index > this.children.size()) {
-            Utils.error("Unable to access index " + index + " in array of size " + this.children.size() +
-                    ", returning null", "engine.utils.Node", 0, Utils.WARNING);
+            Utils.log("Unable to access index " + index + " in child array of size " + this.children.size() +
+                    ", returning null", "engine.utils.Node", 0, true);
             return null;
         }
         return this.children.get(index);
@@ -77,8 +74,8 @@ public class Node {
 
     public Node getChild(String name) {
         for (Node child : this.children) if (child.getName().equals(name)) return child;
-        Utils.error("Unable to access child with name '" + name + "', returning null",
-                "engine.utils.Node", 1, Utils.WARNING);
+        Utils.log("Unable to access child with name '" + name + "', retuning null", "engine.utils.Node",
+                1, true);
         return null;
     }
 
@@ -113,9 +110,9 @@ public class Node {
             out.close();
 
         //catch errors
-        } catch (Exception ex) {
-            Utils.error("Unable to open file for node saving: " + ex.getMessage(),
-                    "engine.utils.Node", 2, Utils.FATAL);
+        } catch (FileNotFoundException e) {
+            Utils.log(e, "engine.utils.Node");
+            e.printStackTrace();
         }
     }
 
@@ -163,8 +160,8 @@ public class Node {
 
             //catch any errors
         } catch (Exception e) {
-            Utils.error("Unable to open file '" + path + "' for node saving: " + e.getMessage(),
-                    "engine.utils.Node", 3, Utils.FATAL);
+            Utils.log(e, "engine.utils.Node");
+            e.printStackTrace();
         }
 
         //return node
@@ -189,8 +186,11 @@ public class Node {
             if (nextLine.charAt(j) == Node.DIVIDER_CHAR) dividerLocation = j; //find divider
 
         //throw error if no divider found
-        if (dividerLocation == -1) Utils.error("Unable to find divider in line: '" + nextLine + "'",
-                "engine.utils.Node", 4, Utils.FATAL);
+        if (dividerLocation == -1) {
+            IllegalStateException e = new IllegalStateException("Could not find divider in line: '" + nextLine + "'");
+            Utils.log(e, "engine.utils.Node");
+            throw e;
+        }
 
         //create node and set name
         Node curr = new Node();
@@ -218,8 +218,11 @@ public class Node {
                     curr.addChild(child); //add child
 
                     //throw error if file suddenly stops
-                    if ((i + 1) > fileContents.size()) Utils.error("unexpected stop in file at line " + i,
-                            "engine.utils.Node", 5, Utils.FATAL);
+                    if ((i + 1) > fileContents.size()) {
+                        IllegalStateException e = new IllegalStateException("Unexpected stop in file at line " + i);
+                        Utils.log(e, "engine.utils.Node");
+                        throw e;
+                    }
 
                     //iterate i
                     i += 1;

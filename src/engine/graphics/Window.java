@@ -1,4 +1,4 @@
-package engine;
+package engine.graphics;
 
 import engine.utils.Controls;
 import engine.utils.Utils;
@@ -12,8 +12,6 @@ import java.nio.IntBuffer;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
-
-//Error Codes Used: 0-2
 
 public class Window {
 
@@ -48,7 +46,11 @@ public class Window {
     public void init() {
 
         //init GLFW
-        if (!glfwInit()) Utils.error("unable to initialize GLFW", "engine.Window", 0, Utils.FATAL);
+        if (!glfwInit()) {
+            IllegalStateException e = new IllegalStateException("Unable to initialize GLFW");
+            Utils.log(e, "engine.graphics.Window");
+            throw e;
+        }
 
         //set window hints
         glfwWindowHint(GLFW_VISIBLE, GL_FALSE); //window will stay hidden after creation
@@ -60,7 +62,11 @@ public class Window {
 
         //create window
         this.id = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
-        if (this.id == NULL) Utils.error("unable to create GLFW window", "engine.Window", 1, Utils.FATAL);
+        if (this.id == NULL) {
+            IllegalStateException e = new IllegalStateException("Unable to create GLFW Window");
+            Utils.log(e, "engine.graphics.Window");
+            throw e;
+        }
 
         //set key callback
         glfwSetKeyCallback(this.id, (window, key, scancode, action, mods) -> {
@@ -98,7 +104,8 @@ public class Window {
             this.height = h.get();
 
         } catch (Exception e) {
-            Utils.error("unable to acquire frame size: " + e.getMessage(), "engine.Window", 2, Utils.FATAL);
+            Utils.log(e, "engine.graphics.Window");
+            e.printStackTrace();
         }
 
         //get the resolution of the primary monitor

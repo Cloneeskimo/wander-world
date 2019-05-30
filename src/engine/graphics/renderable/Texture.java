@@ -29,15 +29,14 @@ public class Texture {
         BufferedImage image = ImageIO.read(Utils.class.getResource(resourcePath));
         this.width = image.getWidth();
         this.height = image.getHeight();
-        int pixels[] = new int[image.getWidth() * image.getHeight()];
-        System.out.println("w: " + image.getWidth() + ", h: " + image.getHeight());
-        image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
+        int pixels[] = new int[this.width * this.height];
+        image.getRGB(0, 0, this.width, this.height, pixels, 0, this.height);
 
         //shove data into buffer
-        ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * 4); //4 bytes per pixel
-        for (int y = 0; y < image.getHeight(); y++) {
-            for (int x = 0; x < image.getWidth(); x++) {
-                int pixel = pixels[y * image.getWidth() + x];
+        ByteBuffer buffer = BufferUtils.createByteBuffer(this.width * this.height * 4); //4 bytes per pixel
+        for (int y = 0; y < this.height; y++) {
+            for (int x = 0; x < this.width; x++) {
+                int pixel = pixels[y * this.width + x];
                 buffer.put((byte) ((pixel >> 16) & 0xFF)); //r
                 buffer.put((byte) ((pixel >> 8) & 0xFF)); //g
                 buffer.put((byte) (pixel & 0xFF)); //b

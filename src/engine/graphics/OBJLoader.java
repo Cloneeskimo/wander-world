@@ -8,7 +8,7 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
-//Error Codes Used: 0
+//Info Codes Used: 0
 
 public class OBJLoader {
 
@@ -56,8 +56,8 @@ public class OBJLoader {
                     faces.add(new Face(tokens[1], tokens[2], tokens[3]));
                     break;
                 default: //other
-                    Utils.error("Ignoring unexpected line of .obj file: " + line,
-                            "engine.graphics.OBJLoader", 0, Utils.INFO);
+                    Utils.log("Ignoring unexpected line of .obj file: " + line,
+                            "engine.graphics.OBJLoader", 0, true);
                     break;
             }
         }

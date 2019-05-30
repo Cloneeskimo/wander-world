@@ -13,7 +13,7 @@
     <properties>
         <lwjgl.version>3.2.1</lwjgl.version>
         <joml.version>1.9.6</joml.version>
-        <native.target>natives-macos</native.target>
+        <native.target>natives-windows</native.target>
         <pngdecoder.version>1.0</pngdecoder.version>
     </properties>
 

@@ -1,0 +1,23 @@
+name: pillarmaze
+{
+	layout: 
+	{
+		width: 10
+		height: 10
+		row 1: pppppppppp
+		row 2: peeeeeeeep
+		row 3: pepepepeep
+		row 4: peepepepep
+		row 5: pepepepeep
+		row 6: peepepepep
+		row 7: pepepepeep
+		row 8: peepepepep
+		row 9: peeeeeeeep
+		row 10: pppppppppp
+	}
+	key: 
+	{
+		p: pillar
+		e: [EMPTY]
+	}
+}

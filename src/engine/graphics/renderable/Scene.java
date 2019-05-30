@@ -44,6 +44,27 @@ public class Scene {
         }
     }
 
+    /**
+     * Will add items to the scene. If the items share meshes with previously added items, the previously
+     * added items will be removed. To avoid this, add all items that share the same mesh at once
+     * @param items the items to be added
+     */
+    public void addItems(List<RenderableItem> items) {
+
+        //sort game items by mesh for optimal rendering
+        if (items == null) return;
+        for (int i = 0; i < items.size(); i ++) {
+            RenderableItem item = items.get(i);
+            Mesh m = item.getMesh();
+            List<RenderableItem> l = meshes.get(m);
+            if (l == null) {
+                l = new ArrayList<>();
+                meshes.put(m, l);
+            }
+            l.add(item);
+        }
+    }
+
     //Cleanup Method
     public void cleanup() {
         for (Mesh mesh : this.meshes.keySet()) mesh.cleanup();

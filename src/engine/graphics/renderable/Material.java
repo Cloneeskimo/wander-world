@@ -1,6 +1,5 @@
 package engine.graphics.renderable;
 
-import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 /**

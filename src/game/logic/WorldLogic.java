@@ -2,20 +2,16 @@ package game.logic;
 
 import engine.Logic;
 import engine.graphics.Camera;
-import engine.graphics.OBJLoader;
 import engine.graphics.Renderer;
 import engine.graphics.Window;
 import engine.graphics.lighting.DirectionalLight;
-import engine.graphics.lighting.PointLight;
 import engine.graphics.lighting.SceneLighting;
-import engine.graphics.renderable.*;
+import engine.graphics.renderable.Scene;
 import engine.utils.Controls;
 import engine.utils.MouseInput;
+import game.Area;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
-
-import java.awt.*;
 
 public class WorldLogic implements Logic {
 
@@ -25,6 +21,7 @@ public class WorldLogic implements Logic {
     private Window window;
     private Scene scene;
     private float directionalLightAngle;
+    private Area area;
 
     //Init Method
     @Override
@@ -36,32 +33,16 @@ public class WorldLogic implements Logic {
         this.camera = new Camera();
         this.window = window; //set window reference
         this.scene = new Scene();
-
-        //create pillar item
-        Texture pillarTexture = new Texture("/textures/templepillar.png");
-        Material pillarMaterial = new Material(pillarTexture);
-        Mesh pillarMesh = OBJLoader.loadOBJ("/models/pillar.obj");
-        pillarMesh.setMaterial(pillarMaterial);
-        RenderableItem pillar = new RenderableItem(pillarMesh);
-        pillar.setPosition(1, 0, -5);
-
-        //create second pillar item
-        Material pillarMaterial2 = new Material(new Vector4f(0.6f, 0.6f, 0.0f, 1.0f));
-        Mesh pillarMesh2 = OBJLoader.loadOBJ("/models/pillar.obj");
-        pillarMesh2.setMaterial(pillarMaterial2);
-        RenderableItem pillar2 = new RenderableItem(pillarMesh2);
-        pillar2.setPosition(-1, 0, -5);
-
-        //add items to scene
-        this.scene.addItems(new RenderableItem[] { pillar, pillar2 });
+        this.area = new Area("pillarmaze"); //load pillarmaze map
 
         //create lighting
         SceneLighting lighting = new SceneLighting();
         lighting.setAmbientLight(new Vector3f(1.0f, 1.0f, 1.0f));
         lighting.setDirectionalLight(new DirectionalLight(new Vector3f(1, 1, 1), new Vector3f(-1, 0, 0), 1.0f));
-        PointLight pl = new PointLight(new Vector3f(1.0f, 0.0f, 0.0f), new Vector3f(0, 0, -5), 1.0f);
-        lighting.setPointLights(new PointLight[] { pl });
         this.scene.setLighting(lighting);
+
+        //add items to scene
+        this.scene.addItems(this.area.getItems());
     }
 
     //Input Method
@@ -113,7 +94,7 @@ public class WorldLogic implements Logic {
 
         }
 
-
+        //update angle
         double angle = Math.toRadians(this.directionalLightAngle);
         dl.getDirection().x = (float) Math.sin(angle);
         dl.getDirection().y = (float) Math.cos(angle);

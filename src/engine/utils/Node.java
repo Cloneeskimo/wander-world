@@ -74,7 +74,7 @@ public class Node {
 
     public Node getChild(String name) {
         for (Node child : this.children) if (child.getName().equals(name)) return child;
-        Utils.log("Unable to access child with name '" + name + "', retuning null", "engine.utils.Node",
+        Utils.log("Unable to access child with name '" + name + "', returning null", "engine.utils.Node",
                 1, true);
         return null;
     }
@@ -100,6 +100,13 @@ public class Node {
      * @param path the path to write the Node to. Will throw an error if doesn't exit or cannot open
      */
     public static void writeNode(Node node, String path) {
+
+        //ensure directories
+        int lastSlash = 0;
+        for (int i = 0; i < path.length(); i++) {
+            if (path.charAt(i) == '/') lastSlash = i;
+        }
+        Utils.ensureDirectory(path.substring(0, lastSlash));
 
         //try to open file to print
         try {

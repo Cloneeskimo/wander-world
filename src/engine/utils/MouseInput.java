@@ -14,7 +14,7 @@ public class MouseInput {
     private final Vector2f deltaPosition;
 
     //Data
-    private boolean inWindow = false;
+    private boolean inWindow = true;
     private boolean leftPressed = false, rightPressed = false;
 
     //Constructor
@@ -26,15 +26,6 @@ public class MouseInput {
 
     //Init Method
     public void init(Window window) {
-
-        //get starting position
-        double[] xi = new double[] { 0 };
-        double[] yi = new double[] { 0 };
-        glfwGetCursorPos(window.getID(), xi, yi);
-        this.previousPosition.x = xi[0];
-        this.previousPosition.y = yi[0];
-        this.currentPosition.x = xi[0];
-        this.currentPosition.y = yi[0];
 
         //set position callback
         glfwSetCursorPosCallback(window.getID(), (id, x, y) -> {

@@ -1,6 +1,7 @@
 package engine;
 
 import engine.graphics.Window;
+import engine.utils.Controls;
 import engine.utils.MouseInput;
 import engine.utils.Timer;
 import engine.utils.Utils;

@@ -7,7 +7,7 @@ import game.logic.WorldLogic;
 public class Game {
 
     //Build Number, Version
-    public static final int BUILD_NO = 32;
+    public static final int BUILD_NO = 35;
     public static final String VERSION = "dev0";
 
     //Main Method

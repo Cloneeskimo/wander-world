@@ -63,7 +63,7 @@ public class Area {
                 Mesh mesh = tileKey.get(row.getValue().charAt(x));
                 if (mesh != null) {
                     RenderableItem item = new RenderableItem(mesh);
-                    item.setPosition(x + 5, 0, y);
+                    item.setPosition(x, 0, y);
                     this.items.add(item);
                 }
             }

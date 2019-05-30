@@ -40,6 +40,8 @@ public class Camera {
      */
     public void rotate(float offsetX, float offsetY, float offsetZ) {
         this.rotation.x += offsetX;
+        if (this.rotation.x < -90) this.rotation.x = -90;
+        if (this.rotation.x > 90) this.rotation.x = 90;
         this.rotation.y += offsetY;
         this.rotation.z += offsetZ;
     }

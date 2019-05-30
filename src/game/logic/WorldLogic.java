@@ -68,6 +68,7 @@ public class WorldLogic implements Logic {
             Vector2f deltaMousePosition = mouseInput.getDeltaPosition();
             this.camera.rotate(deltaMousePosition.y * Controls.MOUSE_SENSITIVITY,
                     deltaMousePosition.x * Controls.MOUSE_SENSITIVITY, 0);
+            Vector3f rot = this.camera.getRotation();
         }
 
         //update camera position
